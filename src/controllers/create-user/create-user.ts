@@ -1,4 +1,5 @@
 import { User } from "../../models/user";
+import { badRequest, createdResponse, serverError } from "../helpers";
 import { HttpRequest, HttpResponse, IController } from "../protocols";
 import { CreateUserDTO, ICreateUserRepository } from "./protocols";
 
@@ -9,7 +10,7 @@ export class CreateUserController implements IController {
 
   async handle(
     httpRequest: HttpRequest<CreateUserDTO>
-  ): Promise<HttpResponse<User>> {
+  ): Promise<HttpResponse<User | string>> {
     try {
       const { body } = httpRequest;
 
@@ -17,33 +18,21 @@ export class CreateUserController implements IController {
 
       for (const field of requiredFields) {
         if (!body?.[field as keyof CreateUserDTO]?.length) {
-          return {
-            statusCode: 400,
-            body: `Fields ${field} is required`,
-          };
+          return badRequest(`Fields ${field} is required`);
         }
       }
 
       const emailIsValid = validator.isEmail(body!.email);
 
       if (!emailIsValid) {
-        return {
-          statusCode: 400,
-          body: `Email is invalid`,
-        };
+        return badRequest("Invalid email");
       }
 
       const user = await this.createUserRepository.createUser(body!);
 
-      return {
-        statusCode: 201,
-        body: user,
-      };
+      return createdResponse<User>(user);
     } catch (err) {
-      return {
-        statusCode: 500,
-        body: "Something went wrong",
-      };
+      return serverError();
     }
   }
 }

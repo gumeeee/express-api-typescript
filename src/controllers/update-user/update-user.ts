@@ -1,4 +1,5 @@
 import { User } from "../../models/user";
+import { badRequest, okResponse, serverError } from "../helpers";
 import { HttpRequest, HttpResponse, IController } from "../protocols";
 import { IUpdateUserRepository, UpdateUserDTO } from "./protocols";
 
@@ -7,23 +8,17 @@ export class UpdateUserController implements IController {
 
   async handle(
     httpRequest: HttpRequest<UpdateUserDTO>
-  ): Promise<HttpResponse<User>> {
+  ): Promise<HttpResponse<User | string>> {
     try {
       const id = httpRequest?.params?.id;
       const body = httpRequest?.body;
 
       if (!body) {
-        return {
-          statusCode: 400,
-          body: "Body is required",
-        };
+        return badRequest("Body is required.");
       }
 
       if (!id) {
-        return {
-          statusCode: 400,
-          body: "User id is required",
-        };
+        badRequest("Id is required.");
       }
 
       const allowedFieldsToUpdate: (keyof UpdateUserDTO)[] = [
@@ -36,23 +31,14 @@ export class UpdateUserController implements IController {
       );
 
       if (someFieldIsNotAllowedToUpdate) {
-        return {
-          statusCode: 400,
-          body: "Some field is not allowed to be updated",
-        };
+        return badRequest("Some field is not allowed to update");
       }
 
       const userUpdated = await this.updateUserRepository.update(id, body!);
 
-      return {
-        statusCode: 200,
-        body: userUpdated,
-      };
+      return okResponse<User>(userUpdated);
     } catch (err) {
-      return {
-        statusCode: 500,
-        body: "Something went wrong",
-      };
+      return serverError();
     }
   }
 }
