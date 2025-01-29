@@ -9,9 +9,12 @@ export class MongoGetUsersRepository implements IGetUsersRepository {
       .find({})
       .toArray();
 
-    return users.map(({ _id, ...user }) => ({
-      ...user,
-      id: _id.toHexString(),
-    }));
+    return users.map(({ _id, ...user }) => {
+      const { id, ...rest } = user;
+      return {
+        id: _id.toHexString(),
+        ...rest,
+      };
+    });
   }
 }
