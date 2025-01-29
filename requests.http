@@ -10,3 +10,13 @@ Content-Type: application/json
     "email": "guilherme.com",
     "password": "123"
 }
+
+### PATCH USER
+PATCH http://localhost:8000/users/6793000ac9b2ced766ba1b8a
+Content-Type: application/json
+
+{
+    "firstName": "Guilherme",
+    "lastName": "Silva",
+    "password": "123"
+}
