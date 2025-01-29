@@ -4,7 +4,7 @@ import { MongoGetUsersRepository } from "./repository/get-users/mongo-get-users"
 import { GetUsersController } from "./controllers/get-users/get-users";
 import { MongoClient } from "./database/mongo";
 import { MongoCreateUserRepository } from "./repository/create-user/mongo-create-user";
-import { CreateUserController } from "./controllers/crreate-user/create-user";
+import { CreateUserController } from "./controllers/create-user/create-user";
 
 const main = async () => {
   config();
