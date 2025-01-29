@@ -7,7 +7,7 @@ Content-Type: application/json
 {
     "firstName": "Guilherme",
     "lastName": "Moura",
-    "email": "guilherme.com",
+    "email": "guilherme@email.com",
     "password": "123"
 }
 
@@ -20,3 +20,5 @@ Content-Type: application/json
     "lastName": "Silva",
     "password": "123"
 }
+### DELETE USER
+DELETE http://localhost:8000/users/6793000ac9b2ced766ba1b8a
